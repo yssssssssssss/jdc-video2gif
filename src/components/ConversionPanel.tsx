@@ -78,11 +78,9 @@ export const ConversionPanel: React.FC<ConversionPanelProps> = ({ className = ''
 
       // 保存转换历史
       localStorageService.addConversionHistory({
-        videoName: videoInfo.name,
-        videoSize: videoInfo.size,
-        gifSize: result.size,
-        options: conversionOptions,
-        duration: conversionOptions.endTime - conversionOptions.startTime
+        originalFileName: videoInfo.name,
+        settings: conversionOptions,
+        outputSize: result.size
       })
 
     } catch (error) {

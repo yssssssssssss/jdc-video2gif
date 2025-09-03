@@ -46,7 +46,10 @@ export const ParameterPanel: React.FC<ParameterPanelProps> = ({ className = '' }
   }, [setConversionOptions])
 
   const handleColorDepthChange = useCallback((colorDepth: number) => {
-    setConversionOptions({ colorDepth })
+    // 确保colorDepth是8、16或24之一
+    const validColorDepth = (colorDepth === 8 || colorDepth === 16 || colorDepth === 24) ? 
+      colorDepth as 8 | 16 | 24 : 16 as 8 | 16 | 24
+    setConversionOptions({ colorDepth: validColorDepth })
   }, [setConversionOptions])
 
   const handleStartTimeChange = useCallback((timeString: string) => {

@@ -371,8 +371,8 @@ class FFmpegService {
   cleanup(): void {
     if (this.ffmpeg) {
       // FFmpeg.wasm 没有显式的清理方法，但可以移除事件监听器
-      this.ffmpeg.off('log')
-      this.ffmpeg.off('progress')
+      this.ffmpeg.off('log', () => {})
+      this.ffmpeg.off('progress', () => {})
     }
   }
 }
