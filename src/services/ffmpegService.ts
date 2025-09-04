@@ -25,8 +25,15 @@ class FFmpegService {
         console.log('[FFmpeg]', message)
       })
 
-      // 加载FFmpeg核心文件 - 直接从CDN加载
+      // 加载FFmpeg核心文件 - 优先使用本地文件，CDN作为备选
       const loadSources = [
+        // 本地文件（避免网络请求）
+        {
+          type: 'local',
+          baseURL: '/ffmpeg',
+          description: '本地文件'
+        },
+        // CDN备选
         {
           type: 'cdn',
           baseURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm',
@@ -49,8 +56,7 @@ class FFmpegService {
           
           await this.ffmpeg.load({
             coreURL: await toBlobURL(`${source.baseURL}/ffmpeg-core.js`, 'text/javascript'),
-            wasmURL: await toBlobURL(`${source.baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-            workerURL: await toBlobURL(`${source.baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
+            wasmURL: await toBlobURL(`${source.baseURL}/ffmpeg-core.wasm`, 'application/wasm')
           })
           
           console.log(`成功从${source.description}加载FFmpeg`)
@@ -65,7 +71,7 @@ class FFmpegService {
       
       // 如果所有源都失败了，抛出错误
       if (!loadSuccess && lastError) {
-        throw new Error(`FFmpeg初始化失败: 无法从CDN加载核心文件。\n\n解决方案：\n1. 检查网络连接\n2. 刷新页面重试\n3. 尝试使用VPN或更换网络环境\n\n详细错误: ${lastError.message}`)
+        throw new Error(`FFmpeg初始化失败: 无法从本地文件或CDN加载核心文件。\n\n解决方案：\n1. 确保public/ffmpeg目录下有FFmpeg文件\n2. 检查网络连接\n3. 刷新页面重试\n\n详细错误: ${lastError.message}`)
       }
 
       this.isLoaded = true
